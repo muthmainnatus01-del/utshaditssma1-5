@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan 5 Mutiara Hadis</title>
+    <style>
+        :root {
+            /* Theme Colors - Dusty Pink, Soft Pink, Cream, Gold, White */
+            --primary: #d81b60;      /* Darker Dusty Pink for text/accents */
+            --secondary: #f48fb1;    /* Standard Pink */
+            --tertiary: #fce4ec;     /* Very Light Pink/Background */
+            --cream: #fff8e1;        /* Cream/Warm White */
+            --gold: #d4af37;         /* Elegant Gold */
+            --white: #ffffff;
+            --text-main: #4a4a4a;    /* Soft Black/Dark Grey for readability */
+            --text-light: #7a7a7a;
+            
+            --border-radius: 20px;
+            --box-shadow: 0 8px 24px rgba(216, 27, 96, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--tertiary) 0%, var(--cream) 100%);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Amiri', 'Times New Roman', serif;
+            font-size: 1.8rem;
+            line-height: 2.2;
+            text-align: right;
+            direction: rtl;
+            color: var(--primary);
+            margin: 15px 0;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border-right: 4px solid var(--gold);
+        }
+
+        /* Container & Layout */
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* UI Elements */
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 5px;
+            background: linear-gradient(to right, var(--secondary), var(--gold));
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 1.8rem; }
+        
+        .btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(244, 143, 177, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(216, 27, 96, 0.4);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--tertiary);
+            color: var(--primary);
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Input Form Styles */
+        .input-form {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            border: 2px solid var(--tertiary);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: var(--transition);
+            background-color: var(--cream);
+        }
+
+        .input-form:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(244, 143, 177, 0.2);
+        }
+
+        .input-form::placeholder {
+            color: #aaa;
+        }
+
+        .error-text {
+            color: #d32f2f;
+            font-size: 0.85rem;
+            margin-top: -5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Ummu Widaad Dialog Component */
+        .dialog-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .character-avatar {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+        }
+
+        .dialog-bubble {
+            background-color: var(--white);
+            padding: 15px 20px;
+            border-radius: 20px 20px 20px 5px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            flex: 1;
+            border: 2px solid var(--tertiary);
+        }
+
+        .dialog-bubble::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            bottom: 15px;
+            border-width: 10px 15px 10px 0;
+            border-style: solid;
+            border-color: transparent var(--white) transparent transparent;
+        }
+
+        .dialog-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-style: italic;
+        }
+
+        /* Map Level Selection */
+        .map-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .level-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .level-btn:hover:not(.locked) {
+            transform: scale(1.02);
+            box-shadow: var(--box-shadow);
+            background-color: var(--tertiary);
+        }
+
+        .level-btn.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-color: #ccc;
+            background-color: #f9f9f9;
+        }
+
+        .level-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .level-num { font-weight: bold; color: var(--primary); }
+        .level-title { font-size: 0.9rem; color: var(--text-main); }
+        .level-status { font-size: 1.2rem; }
+
+        /* Quiz Options */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--tertiary);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            border-color: var(--secondary);
+            background-color: var(--tertiary);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .score-display {
+            font-weight: bold;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: var(--tertiary);
+            border-radius: 10px;
+            height: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Decorative Elements */
+        .flower-ornament {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            width: 40px;
+            height: 40px;
+            fill: #ccc;
+            transition: fill 0.5s ease;
+        }
+
+        .star.active { fill: var(--gold); animation: pulse 0.5s ease; }
+
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 20px; }
+        .mb-2 { margin-bottom: 20px; }
+        .hidden { display: none !important; }
+
+        @media (min-width: 600px) {
+            .app-container { padding: 40px 20px; }
+            h1 { font-size: 2.2rem; }
+            .btn { max-width: 250px; }
+            .dialog-bubble { padding: 20px 25px; }
+            .character-avatar { width: 120px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SVG Definitions (Hidden) -->
+    <svg width="0" height="0" class="hidden">
+        <defs>
+            <!-- Ummu Widaad Character SVG -->
+            <g id="ummu-widaad-svg">
+                <filter id="shadow">
+                  <feDropShadow dx="0" dy="5" stdDeviation="4" flood-opacity="0.2"/>
+                </filter>
+                <!-- Background Aura -->
+                <circle cx="100" cy="120" r="80" fill="#fce4ec" opacity="0.6" />
+                <!-- Body/Abaya -->
+                <path d="M 40 280 C 40 160, 60 120, 100 120 C 140 120, 160 160, 160 280 Z" fill="#2C2C2C" filter="url(#shadow)"/>
+                <path d="M 50 280 C 50 180, 70 140, 100 140 C 130 140, 150 180, 150 280 Z" fill="#1A1A1A"/>
+                <!-- Khimar -->
+                <path d="M 60 140 C 60 40, 75 20, 100 20 C 125 20, 140 40, 140 140 C 140 190, 120 220, 100 220 C 80 220, 60 190, 60 140 Z" fill="#222" filter="url(#shadow)"/>
+                <!-- Niqab Area (No face, just structure) -->
+                <path d="M 75 70 Q 100 80 125 70 L 125 120 Q 100 130 75 120 Z" fill="#111"/>
+                <rect x="85" y="75" width="30" height="4" fill="#333" rx="2"/>
+                <!-- Decorative Pin -->
+                <circle cx="100" cy="140" r="4" fill="#d4af37"/>
+                <circle cx="100" cy="140" r="2" fill="#fff"/>
+            </g>
+            
+            <!-- Star Icon -->
+            <g id="icon-star">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </g>
+
+            <!-- Lock Icon -->
+            <g id="icon-lock">
+                <path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3z"/>
+            </g>
+        </defs>
+    </svg>
+
+    <div class="app-container">
+        <!-- Top Bar (Hidden on Home) -->
+        <div id="topBar" class="top-bar hidden">
+            <button class="btn btn-outline" style="max-width: 80px; padding: 5px 10px; margin:0;" onclick="goToMap()">🗺️ Peta</button>
+            <div class="score-display">
+                <svg width="20" height="20" viewBox="0 0 24 24"><use href="#icon-star" fill="var(--gold)"/></svg>
+                <span id="globalScore">0</span> Poin
+            </div>
+        </div>
+
+        <!-- Page 1: Home -->
+        <div id="pageHome" class="page active">
+            <div class="text-center">
+                <svg viewBox="0 0 200 250" width="150" height="180" style="margin-bottom: -20px;">
+                    <use href="#ummu-widaad-svg"/>
+                </svg>
+                <h1>Petualangan<br>5 Mutiara Hadis</h1>
+                <p style="color: var(--primary); font-style: italic; margin-bottom: 20px;">Arba'in An-Nawawi</p>
+            </div>
+            
+            <div class="card">
+                <p class="text-center">Ahlan wa sahlan, shalihah! 🌷<br>Mari belajar, memahami, dan mengamalkan hadis-hadis pilihan Rasulullah ﷺ bersama Ummu Widaad.</p>
+            </div>
+
+            <div class="card" style="padding: 20px; background-color: var(--white);">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--primary);">Data Santriwati</h3>
+                <input type="text" id="playerName" class="input-form" placeholder="Nama Lengkap Anti..." required autocomplete="off">
+                <input type="text" id="playerClass" class="input-form" placeholder="Kelas (Contoh: 7A, 10 MIPA)..." required autocomplete="off">
+                <p id="formError" class="error-text hidden">Mohon isi Nama dan Kelas terlebih dahulu, ya shalihah.</p>
+            </div>
+            
+            <button class="btn" onclick="validateAndStart()">Mulai Petualangan 🌸</button>
+            <button class="btn btn-outline" id="btnReset" onclick="handleReset()">Reset Progres</button>
+        </div>
+
+        <!-- Page 2: Instructions -->
+        <div id="pageInstructions" class="page">
+            <div class="dialog-container">
+                <svg viewBox="0 0 200 250" class="character-avatar"><use href="#ummu-widaad-svg"/></svg>
+                <div class="dialog-bubble">
+                    <p class="dialog-text" id="introDialogText">«Assalamu’alaikum, shalihah! Selamat datang dalam perjalanan mempelajari lima mutiara hadis Arba’in An-Nawawi. Aku, Ummu Widaad, akan menemanimu.»</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Petunjuk Permainan</h2>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>Terdapat <strong>5 Level</strong> yang membahas Hadis 1 hingga 5.</li>
+                    <li>Baca dan pahami materi hadis dengan saksama.</li>
+                    <li>Jawab tantangan kuis untuk menguji pemahamanmu.</li>
+                    <li>Dapatkan poin: <strong>+10</strong> untuk jawaban benar, <strong>+20</strong> tamat level.</li>
+                    <li>Kumpulkan bintang di setiap akhir level! 🌟</li>
+                </ul>
+            </div>
+
+            <button class="btn" onclick="goToMap()">Lihat Peta Hadis</button>
+        </div>
+
+        <!-- Page 3: Map -->
+        <div id="pageMap" class="page">
+            <h2>Peta Perjalanan</h2>
+            <p class="text-center mb-2">Pilih level mutiara yang ingin kamu pelajari, ukhti.</p>
+            
+            <div id="mapLevels" class="map-container">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- Page 4: Material -->
+        <div id="pageMaterial" class="page">
+            <h2 id="matTitle">Judul Level</h2>
+            
+            <div class="dialog-container">
+                <svg viewBox="0 0 200 250" class="character-avatar"><use href="#ummu-widaad-svg"/></svg>
+                <div class="dialog-bubble">
+                    <p class="dialog-text" id="matDialog">Dialog pembuka materi.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div id="matArabic" class="arabic-text">Teks Arab</div>
+                <div style="font-style: italic; margin-bottom: 15px; font-size: 0.9rem;" id="matTranslation">Terjemahan</div>
+                <hr style="border: 0; border-top: 1px dashed var(--secondary); margin: 15px 0;">
+                <div id="matExplanation">Penjelasan materi...</div>
+            </div>
+
+            <button class="btn" onclick="startChallenge()">Mulai Tantangan 📝</button>
+        </div>
+
+        <!-- Page 5: Challenge (Quiz) -->
+        <div id="pageChallenge" class="page">
+            <div class="progress-container">
+                <div id="quizProgress" class="progress-bar"></div>
+            </div>
+            <p class="text-center" style="font-size: 0.8rem; color: var(--text-light);">Pertanyaan <span id="qCurrent">1</span> dari <span id="qTotal">4</span></p>
+            
+            <div class="card mt-2">
+                <h3 id="qText" style="text-align: left; color: var(--text-main); font-size: 1.1rem;">Teks Pertanyaan?</h3>
+                <div id="qOptions" class="options-grid">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <div id="feedbackContainer" class="dialog-container hidden">
+                <svg viewBox="0 0 200 250" class="character-avatar"><use href="#ummu-widaad-svg"/></svg>
+                <div class="dialog-bubble">
+                    <p class="dialog-text" id="feedbackText">Feedback.</p>
+                </div>
+            </div>
+
+            <button id="btnNextQuestion" class="btn hidden" onclick="nextQuestion()">Selanjutnya</button>
+        </div>
+
+        <!-- Page 6: Level Result -->
+        <div id="pageLevelResult" class="page">
+            <h2>Alhamdulillah!</h2>
+            
+            <div class="card text-center">
+                <p>Kamu telah menyelesaikan <strong id="resLevelTitle">Level X</strong></p>
+                <div class="stars-container" id="levelStars">
+                    <!-- Stars populated via JS -->
+                </div>
+                <p style="font-size: 1.2rem;">Skor Level: <strong id="resLevelScore" style="color: var(--primary);">0</strong></p>
+                
+                <div style="background-color: var(--tertiary); padding: 15px; border-radius: 10px; margin-top: 20px; text-align: left;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px;">Ringkasan Pelajaran:</h4>
+                    <p id="resSummary" style="font-size: 0.9rem;">Ringkasan...</p>
+                </div>
+            </div>
+
+            <div class="dialog-container">
+                <svg viewBox="0 0 200 250" class="character-avatar"><use href="#ummu-widaad-svg"/></svg>
+                <div class="dialog-bubble">
+                    <p class="dialog-text" id="resDialog">«Bagus sekali, ukhti! Mari kita lanjutkan perjalanan mencari ilmu.»</p>
+                </div>
+            </div>
+
+            <button id="btnNextLevel" class="btn" onclick="goToNextLevel()">Lanjut Level Berikutnya</button>
+            <button class="btn btn-outline" onclick="goToMap()">Kembali ke Peta</button>
+        </div>
+
+        <!-- Page 7: Final Result -->
+        <div id="pageFinalResult" class="page">
+            <h1>Maa Syaa Allah! 🎉</h1>
+            
+            <div class="card text-center">
+                <p>Anti telah berhasil menyelesaikan seluruh Petualangan 5 Mutiara Hadis Arba'in An-Nawawi.</p>
+                <div class="stars-container" id="finalStars">
+                    <!-- Stars populated via JS -->
+                </div>
+                <h3 id="finalTitle" style="color: var(--gold); margin-bottom: 10px;">Gelar</h3>
+                <p style="font-size: 1.2rem;">Total Skor Akhir: <strong id="resFinalScore" style="color: var(--primary);">0</strong></p>
+            </div>
+
+            <div class="dialog-container">
+                <svg viewBox="0 0 200 250" class="character-avatar"><use href="#ummu-widaad-svg"/></svg>
+                <div class="dialog-bubble">
+                    <p class="dialog-text">«بارك الله فيكِ! (Semoga Allah memberkahimu). Semoga lima mutiara hadis ini tidak hanya kita hafalkan, tetapi juga kita amalkan dalam kehidupan sehari-hari, ya shalihah.»</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="showPage('pageSummary')">Lihat Ringkasan Hadis</button>
+            <button class="btn btn-outline" onclick="goToMap()">Mainkan Ulang</button>
+        </div>
+
+        <!-- Page 8: All Summary -->
+        <div id="pageSummary" class="page">
+            <h2>Kumpulan Mutiara Hadis</h2>
+            <div id="allSummaries" style="width: 100%;">
+                <!-- Populated via JS -->
+            </div>
+            <button class="btn mt-2" onclick="goToMap()">Kembali ke Peta</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Game Data structure based on pedagogical requirements
+        const gameData = [
+            {
+                id: 1,
+                title: "Level 1: Niat dan Keikhlasan",
+                subtitle: "Hadis ke-1",
+                dialogIntro: "«Mari kita mulai dari dasar segala amal, shalihah. Hadis pertama ini mengingatkan kita tentang pentingnya niat di dalam hati.»",
+                arabic: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى",
+                translation: "“Sesungguhnya amal itu tergantung pada niatnya, dan sesungguhnya setiap orang akan mendapatkan apa yang ia niatkan.” (HR. Bukhari dan Muslim)",
+                explanation: "<strong>Materi:</strong><br><ul style='padding-left:20px; margin-top:5px;'><li><strong>Kedudukan Niat:</strong> Niat adalah syarat sahnya ibadah dan pembeda antara kebiasaan dengan ibadah.</li><li><strong>Ikhlas:</strong> Niat yang benar adalah ikhlas semata-mata mengharapkan ridha Allah ﷻ, bukan pujian manusia.</li><li><strong>Dampak:</strong> Amal yang terlihat besar bisa bernilai kecil karena salah niat, dan amalan sederhana bisa bernilai besar karena niat yang ikhlas.</li></ul>",
+                summary: "Niat adalah pondasi amal. Selalu perbarui niatmu, jadikan setiap aktivitas belajarmu, membantu orang tua, dan ibadahmu murni karena Allah ﷻ.",
+                questions: [
+                    {
+                        text: "Menurut hadis pertama, nilai suatu amal perbuatan manusia sangat bergantung pada...",
+                        options: ["Hasil akhirnya", "Niat di dalam hatinya", "Jumlah hartanya", "Pujian dari orang lain"],
+                        answer: 1
+                    },
+                    {
+                        text: "Studi Kasus: Fatimah rajin muraja'ah (mengulang hafalan) Al-Qur'an setiap hari, tetapi di dalam hatinya ia berharap agar ustadzah memujinya di depan kelas. Bagaimana status amalnya?",
+                        options: [
+                            "Amalnya sempurna karena usahanya keras",
+                            "Amalnya tertolak atau kurang berkah karena niatnya bukan murni untuk Allah",
+                            "Amalnya tetap dicatat sebagai keikhlasan mutlak",
+                            "Tidak masalah selama ia tetap membaca Al-Qur'an"
+                        ],
+                        answer: 1
+                    },
+                    {
+                        text: "Manakah pernyataan di bawah ini yang paling tepat tentang niat?",
+                        options: [
+                            "Niat harus selalu diucapkan dengan suara keras",
+                            "Niat membedakan antara aktivitas kebiasaan (adat) dengan ibadah",
+                            "Niat hanya penting untuk ibadah salat saja",
+                            "Niat tidak bisa diubah di pertengahan amal"
+                        ],
+                        answer: 1
+                    },
+                    {
+                        text: "Kapan waktu yang paling tepat untuk memperbaiki niat kita?",
+                        options: [
+                            "Hanya sebelum memulai amal",
+                            "Hanya setelah selesai beramal",
+                            "Sebelum, sedang, dan sesudah melakukan amal agar terhindar dari riya'",
+                            "Saat ada orang lain yang melihat kita"
+                        ],
+                        answer: 2
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Level 2: Islam, Iman, & Ihsan",
+                subtitle: "Hadis ke-2 (Hadis Jibril)",
+                dialogIntro: "«Alhamdulillah, kita sampai di mutiara kedua. Hadis ini sangat agung, menjelaskan tingkatan agama kita. Mari kita simak!»",
+                arabic: "الإِسْلَامُ أَنْ تَشْهَدَ أَنْ لَا إِلَهَ إِلَّا اللهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللهِ... الإِيمَانُ أَنْ تُؤْمِنَ بِاللهِ وَمَلَائِكَتِهِ... الإِحْسَانُ أَنْ تَعْبُدَ اللهَ كَأَنَّكَ تَرَاهُ...",
+                translation: "(Potongan Hadis) “Islam adalah engkau bersyahadat, mendirikan salat... Iman adalah engkau beriman kepada Allah, malaikat-Nya... Ihsan adalah engkau beribadah kepada Allah seakan-akan engkau melihat-Nya, jika engkau tidak melihat-Nya, sesungguhnya Dia melihatmu.” (HR. Muslim)",
+                explanation: "<strong>Materi:</strong><br><ul style='padding-left:20px; margin-top:5px;'><li><strong>Tingkatan Agama:</strong> Terdiri dari 3 tingkatan: Islam (amalan zahir/luar), Iman (keyakinan batin/hati), dan Ihsan (puncak kualitas ibadah).</li><li><strong>Rukun:</strong> Islam memiliki 5 rukun. Iman memiliki 6 rukun.</li><li><strong>Ihsan:</strong> Merupakan sikap <em>Muraqabah</em>, yaitu merasa selalu diawasi oleh Allah ﷻ dalam setiap keadaan, baik saat beribadah maupun bermuamalah.</li></ul>",
+                summary: "Agama kita memiliki tingkatan. Mulailah dengan menjalankan syariat (Islam), kuatkan keyakinan di hati (Iman), dan hiasi dengan perasaan selalu diawasi Allah (Ihsan).",
+                questions: [
+                    {
+                        text: "Dalam Hadis Jibril, tingkatan agama yang paling tinggi, di mana kita beribadah seakan-akan melihat Allah (atau merasa diawasi-Nya) disebut...",
+                        options: ["Islam", "Iman", "Ihsan", "Taqwa"],
+                        answer: 2
+                    },
+                    {
+                        text: "Berapa jumlah Rukun Islam dan Rukun Iman yang disebutkan dalam hadis ini secara berurutan?",
+                        options: [
+                            "5 Rukun Islam dan 5 Rukun Iman",
+                            "6 Rukun Islam dan 5 Rukun Iman",
+                            "5 Rukun Islam dan 6 Rukun Iman",
+                            "6 Rukun Islam dan 6 Rukun Iman"
+                        ],
+                        answer: 2
+                    },
+                    {
+                        text: "Studi Kasus: Aisyah sedang mengerjakan ujian di kelas. Guru sedang keluar ruangan dan teman-temannya mulai mencontek. Aisyah tetap mengerjakan sendiri karena ia yakin Allah ﷻ melihatnya. Sikap Aisyah ini mencerminkan...",
+                        options: ["Rukun Islam", "Sikap Ihsan (Muraqabah)", "Riya'", "Kesyirikan"],
+                        answer: 1
+                    },
+                    {
+                        text: "Siapakah laki-laki berpakaian sangat putih dan berambut sangat hitam yang datang bertanya kepada Rasulullah ﷺ dalam hadis ini?",
+                        options: ["Malaikat Mikail", "Malaikat Jibril yang menyamar", "Seorang sahabat dari luar kota", "Malaikat Israfil"],
+                        answer: 1
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Level 3: Pondasi Islam",
+                subtitle: "Hadis ke-3",
+                dialogIntro: "«Mutiara ketiga membahas bangunan agama kita, ukhti. Ibarat sebuah rumah, ia butuh tiang yang kuat agar tidak rubuh.»",
+                arabic: "بُنِيَ الإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللهِ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ البَيْتِ، وَصَوْمِ رَمَضَانَ",
+                translation: "“Islam dibangun di atas lima perkara: persaksian bahwa tiada tuhan yang berhak disembah kecuali Allah dan Muhammad adalah utusan Allah, mendirikan salat, menunaikan zakat, haji ke Baitullah, dan puasa Ramadan.” (HR. Bukhari dan Muslim)",
+                explanation: "<strong>Materi:</strong><br><ul style='padding-left:20px; margin-top:5px;'><li><strong>Perumpamaan:</strong> Islam diibaratkan seperti sebuah bangunan. Jika salah satu rukun (tiang) runtuh, maka cacatlah bangunan tersebut.</li><li><strong>Syahadat:</strong> Pondasi utama dan syarat diterimanya amal.</li><li><strong>Salat:</strong> Tiang agama yang tidak boleh ditinggalkan dalam keadaan apapun (selama berakal).</li><li><strong>Zakat & Haji:</strong> Diwajibkan bagi yang memiliki kemampuan (harta/fisik).</li></ul>",
+                summary: "Jagalah 5 rukun Islam ini. Jangan pernah tinggalkan salat lima waktu, karena ia adalah tiang penopang agamamu setelah engkau bersyahadat.",
+                questions: [
+                    {
+                        text: "Dalam hadis ini, Islam diumpamakan seperti...",
+                        options: ["Sebuah pohon yang rindang", "Sebuah bangunan yang dibangun di atas lima pondasi", "Sebuah kapal di lautan", "Sebuah pedang yang tajam"],
+                        answer: 1
+                    },
+                    {
+                        text: "Rukun Islam manakah yang merupakan syarat mutlak dan kunci masuknya seseorang ke dalam Islam?",
+                        options: ["Mendirikan Salat", "Puasa Ramadan", "Dua Kalimat Syahadat", "Menunaikan Zakat"],
+                        answer: 2
+                    },
+                    {
+                        text: "Studi Kasus: Khadijah sedang sakit demam dan tidak bisa berdiri lama. Bagaimana hukum salat fardu bagi Khadijah?",
+                        options: [
+                            "Boleh ditinggalkan dan diganti saat sehat",
+                            "Tetap wajib dikerjakan semampunya (misal dengan duduk atau berbaring)",
+                            "Cukup diganti dengan membayar fidyah",
+                            "Hanya wajib salat sunnah saja"
+                        ],
+                        answer: 1
+                    },
+                    {
+                        text: "Rukun Islam manakah yang kewajibannya diikat dengan syarat 'mampu' (istitha'ah) baik secara fisik, finansial, maupun keamanan jalan?",
+                        options: ["Salat dan Puasa", "Haji", "Syahadat", "Membaca Al-Qur'an"],
+                        answer: 1
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Level 4: Penciptaan & Takdir",
+                subtitle: "Hadis ke-4",
+                dialogIntro: "«Mutiara keempat ini sangat menyentuh hati, shalihah. Mengingatkan dari mana kita berasal dan ke mana kita bermuara. Mari pelajari dengan iman.»",
+                arabic: "إِنَّ أَحَدَكُمْ يُجْمَعُ خَلْقُهُ فِي بَطْنِ أُمِّهِ أَرْبَعِينَ يَوْمًا نُطْفَةً... ثُمَّ يُرْسَلُ إِلَيْهِ المَلَكُ فَيَنْفُخُ فِيهِ الرُّوحَ، وَيُؤْمَرُ بِأَرْبَعِ كَلِمَاتٍ: بِكَتْبِ رِزْقِهِ، وَأَجَلِهِ، وَعَمَلِهِ، وَشَقِيٌّ أَوْ سَعِيدٌ",
+                translation: "(Potongan Hadis) “Sesungguhnya setiap kalian dikumpulkan penciptaannya di perut ibunya 40 hari (nutfah)... lalu diutus malaikat meniupkan ruh dan diperintahkan mencatat 4 hal: rezekinya, ajalnya, amalnya, dan kecelakaannya atau kebahagiaannya.” (HR. Bukhari dan Muslim)",
+                explanation: "<strong>Materi:</strong><br><ul style='padding-left:20px; margin-top:5px;'><li><strong>Proses Penciptaan:</strong> Manusia diciptakan bertahap dalam rahim: Nutfah (mani), 'Alaqah (segumpal darah), Mudhghah (segumpal daging).</li><li><strong>Penetapan Takdir:</strong> Malaikat mencatat 4 hal sebelum kita lahir: Rezeki, Ajal, Amal, dan Akhir kehidupan (surga/neraka).</li><li><strong>Sikap:</strong> Kita tidak tahu takdir kita, maka kewajiban kita adalah beramal saleh, berdoa, dan tidak menjadikan takdir sebagai alasan bermalas-malasan.</li></ul>",
+                summary: "Allah ﷻ telah menetapkan takdirmu, namun Dia juga memerintahkanmu untuk berusaha. Lakukanlah ketaatan, niscaya Allah akan mudahkan jalanmu menuju kebaikan.",
+                questions: [
+                    {
+                        text: "Berdasarkan hadis ini, pada usia berapakah ruh ditiupkan ke dalam janin di dalam rahim ibu?",
+                        options: ["40 hari", "80 hari", "120 hari (4 bulan)", "9 bulan"],
+                        answer: 2
+                    },
+                    {
+                        text: "Malaikat diperintahkan untuk mencatat empat hal bagi janin. Berikut ini yang <strong>bukan</strong> termasuk dari empat hal tersebut adalah...",
+                        options: ["Rezekinya", "Ajalnya (batas umurnya)", "Amalnya", "Warna kulitnya"],
+                        answer: 3
+                    },
+                    {
+                        text: "Studi Kasus: Zainab malas belajar untuk ujian, ia berkata 'Ah, kalau takdirku nilainya jelek ya jelek saja, tidak usah belajar'. Bagaimana pandangan Islam terhadap sikap ini?",
+                        options: [
+                            "Benar, karena semua sudah ditakdirkan",
+                            "Salah, karena kita diperintahkan berusaha (ikhtiar) dan tidak boleh berdalih dengan takdir untuk kemalasan",
+                            "Benar, karena tawakal lebih penting dari usaha",
+                            "Salah, karena takdir bisa diubah dengan kemarahan"
+                        ],
+                        answer: 1
+                    },
+                    {
+                        text: "Pelajaran penting apa yang bisa kita ambil dari akhir hadis ini (tentang orang yang beramal baik di akhir hayat atau sebaliknya)?",
+                        options: [
+                            "Amal perbuatan ditentukan oleh niat awalnya saja",
+                            "Pentingnya memohon <em>Husnul Khatimah</em> (akhir yang baik) dan tidak sombong dengan amal saat ini",
+                            "Kita boleh berbuat dosa selagi muda, nanti tobat saat tua",
+                            "Manusia tidak butuh hidayah Allah"
+                        ],
+                        answer: 1
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Level 5: Menjaga Kemurnian Agama",
+                subtitle: "Hadis ke-5",
+                dialogIntro: "«Mutiara kelima, mutiara terakhir kita, ukhti. Ini adalah prinsip penting agar ibadah kita tidak sia-sia dan diterima oleh Allah ﷻ.»",
+                arabic: "مَنْ أَحْدَثَ فِي أَمْرِنَا هَذَا مَا لَيْسَ مِنْهُ فَهُوَ رَدٌّ",
+                translation: "“Barangsiapa yang mengada-adakan suatu perkara baru dalam urusan (agama) kami ini yang tidak ada asalnya darinya, maka perkara tersebut tertolak.” (HR. Bukhari dan Muslim)",
+                explanation: "<strong>Materi:</strong><br><ul style='padding-left:20px; margin-top:5px;'><li><strong>Syarat Amal Diterima:</strong> Ikhlas karena Allah (Hadis 1) dan <em>Ittiba'</em> (mengikuti tuntunan Rasulullah ﷺ).</li><li><strong>Larangan Bid'ah:</strong> Agama Islam telah sempurna. Membuat-buat ibadah baru (dalam urusan agama/ibadah mahdhah) adalah terlarang dan amalnya tertolak (raddun).</li><li><strong>Beda Adat & Ibadah:</strong> Inovasi dalam urusan dunia (teknologi, pendidikan) dibolehkan. Larangan ini khusus untuk urusan ritual agama.</li></ul>",
+                summary: "Beribadahlah sesuai dengan contoh dari Nabi Muhammad ﷺ. Jangan mengada-adakan ibadah baru agar amal kita tidak tertolak. Pelajari ilmu sebelum beramal.",
+                questions: [
+                    {
+                        text: "Makna dari kata 'Raddun' (رَدٌّ) dalam hadis ini adalah...",
+                        options: ["Diterima", "Tertolak", "Ditunda", "Diberi pahala sebagian"],
+                        answer: 1
+                    },
+                    {
+                        text: "Larangan mengada-adakan hal baru (Muhdats) dalam hadis ini berlaku khusus untuk urusan...",
+                        options: ["Teknologi dan sains", "Pakaian dan adat istiadat", "Agama dan ibadah ritual (Mahdhah)", "Sistem pendidikan sekolah"],
+                        answer: 2
+                    },
+                    {
+                        text: "Agar suatu amal ibadah diterima oleh Allah ﷻ, ulama menjelaskan harus memenuhi 2 syarat utama, yaitu...",
+                        options: [
+                            "Banyak biayanya dan dilihat orang",
+                            "Ikhlas karena Allah (Niat) dan Mengikuti sunnah Rasulullah ﷺ (Ittiba')",
+                            "Niat yang baik dan dilakukan turun-temurun",
+                            "Dilakukan di masjid dan bersuara keras"
+                        ],
+                        answer: 1
+                    },
+                    {
+                        text: "Studi Kasus: Menggunakan laptop dan proyektor untuk mengajarkan Al-Qur'an di kelas adalah hal yang tidak ada di zaman Nabi ﷺ. Apakah ini termasuk perkara yang tertolak berdasarkan hadis ke-5?",
+                        options: [
+                            "Ya, karena tidak dilakukan Nabi ﷺ",
+                            "Tidak, karena itu adalah sarana/teknologi urusan dunia untuk membantu kebaikan, bukan ritual ibadah baru",
+                            "Ya, karena menggunakan listrik",
+                            "Tidak tahu"
+                        ],
+                        answer: 1
+                    }
+                ]
+            }
+        ];
+
+        // State
+        let gameState = {
+            playerName: "",
+            playerClass: "",
+            unlockedLevels: 1, // 1 to 5
+            levelScores: [0, 0, 0, 0, 0], // Store score per level
+            levelStars: [0, 0, 0, 0, 0], // Store stars per level
+            totalScore: 0,
+            completed: false
+        };
+
+        // Temporary level state
+        let currentLevelIndex = 0;
+        let currentQuestionIndex = 0;
+        let tempLevelScore = 0;
+        let userAnswers = []; // Store to prevent answering twice
+
+        // Load progress from localStorage
+        const savedState = localStorage.getItem('arbainGameState');
+        if (savedState) {
+            try {
+                gameState = JSON.parse(savedState);
+            } catch (e) {
+                console.error("Could not load state");
+            }
+        }
+
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const topBar = document.getElementById('topBar');
+        const globalScoreEl = document.getElementById('globalScore');
+
+        // Sounds (Muted entirely per request - using visual feedback instead)
+
+        function showPage(pageId) {
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+            
+            if(pageId === 'pageHome' || pageId === 'pageInstructions') {
+                topBar.classList.add('hidden');
+            } else {
+                topBar.classList.remove('hidden');
+                updateTopScore();
+            }
+        }
+
+        function updateTopScore() {
+            let total = gameState.levelScores.reduce((a, b) => a + b, 0);
+            if (gameState.completed) total += 30; // Game completion bonus
+            gameState.totalScore = total;
+            globalScoreEl.innerText = total;
+            saveProgress();
+        }
+
+        function saveProgress() {
+            localStorage.setItem('arbainGameState', JSON.stringify(gameState));
+        }
+
+        function validateAndStart() {
+            const nameInput = document.getElementById('playerName').value.trim();
+            const classInput = document.getElementById('playerClass').value.trim();
+            const errorMsg = document.getElementById('formError');
+            
+            if (!nameInput || !classInput) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            
+            errorMsg.classList.add('hidden');
+            gameState.playerName = nameInput;
+            gameState.playerClass = classInput;
+            saveProgress();
+            
+            // Personalize the greeting
+            document.getElementById('introDialogText').innerText = `«Assalamu’alaikum, ${gameState.playerName}! 🌷 Selamat datang dalam perjalanan mempelajari lima mutiara hadis Arba’in An-Nawawi. Aku, Ummu Widaad, akan menemanimu.»`;
+            
+            showPage('pageInstructions');
+        }
+
+        let resetClicks = 0;
+        function handleReset() {
+            const btn = document.getElementById('btnReset');
+            if (resetClicks === 0) {
+                btn.innerText = "Yakin? Klik lagi untuk Hapus";
+                btn.style.backgroundColor = "#ffcdd2";
+                btn.style.borderColor = "#f44336";
+                btn.style.color = "#d32f2f";
+                resetClicks++;
+                setTimeout(() => {
+                    resetClicks = 0;
+                    btn.innerText = "Reset Progres";
+                    btn.style = ""; // reset inline styles
+                }, 3000);
+            } else {
+                localStorage.removeItem('arbainGameState');
+                location.reload();
+            }
+        }
+
+        function resetProgress() {
+            // Deprecated, use handleReset instead to avoid window.confirm
+            handleReset();
+        }
+
+        function goToMap() {
+            renderMap();
+            showPage('pageMap');
+        }
+
+        function renderMap() {
+            const mapContainer = document.getElementById('mapLevels');
+            mapContainer.innerHTML = '';
+            
+            gameData.forEach((level, index) => {
+                const isUnlocked = index < gameState.unlockedLevels;
+                const stars = gameState.levelStars[index];
+                
+                let statusHtml = '';
+                if (!isUnlocked) {
+                    statusHtml = `<svg width="24" height="24" viewBox="0 0 24 24" fill="#aaa"><use href="#icon-lock"/></svg>`;
+                } else if (stars > 0) {
+                    statusHtml = `<div style="display:flex;">`;
+                    for(let i=0; i<3; i++) {
+                        statusHtml += `<svg width="16" height="16" viewBox="0 0 24 24" fill="${i < stars ? 'var(--gold)' : '#ccc'}"><use href="#icon-star"/></svg>`;
+                    }
+                    statusHtml += `</div>`;
+                } else {
+                    statusHtml = `<span style="color:var(--secondary); font-size:0.8rem; font-weight:bold;">Mulai</span>`;
+                }
+
+                const btn = document.createElement('div');
+                btn.className = `level-btn ${!isUnlocked ? 'locked' : ''}`;
+                btn.innerHTML = `
+                    <div class="level-info">
+                        <span class="level-num">${level.subtitle}</span>
+                        <span class="level-title">${level.title.split(': ')[1]}</span>
+                    </div>
+                    <div class="level-status">${statusHtml}</div>
+                `;
+                
+                if (isUnlocked) {
+                    btn.onclick = () => loadMaterial(index);
+                }
+                
+                mapContainer.appendChild(btn);
+            });
+        }
+
+        function loadMaterial(index) {
+            currentLevelIndex = index;
+            const level = gameData[index];
+            
+            document.getElementById('matTitle').innerText = level.title;
+            document.getElementById('matDialog').innerText = level.dialogIntro;
+            document.getElementById('matArabic').innerText = level.arabic;
+            document.getElementById('matTranslation').innerText = level.translation;
+            document.getElementById('matExplanation').innerHTML = level.explanation;
+            
+            showPage('pageMaterial');
+        }
+
+        function startChallenge() {
+            currentQuestionIndex = 0;
+            tempLevelScore = 0;
+            userAnswers = Array(gameData[currentLevelIndex].questions.length).fill(null);
+            
+            showPage('pageChallenge');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const level = gameData[currentLevelIndex];
+            const q = level.questions[currentQuestionIndex];
+            
+            document.getElementById('qCurrent').innerText = currentQuestionIndex + 1;
+            document.getElementById('qTotal').innerText = level.questions.length;
+            document.getElementById('qText').innerHTML = q.text;
+            
+            // Progress bar
+            const progress = ((currentQuestionIndex) / level.questions.length) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            
+            const optionsGrid = document.getElementById('qOptions');
+            optionsGrid.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer(idx, btn);
+                optionsGrid.appendChild(btn);
+            });
+            
+            document.getElementById('feedbackContainer').classList.add('hidden');
+            document.getElementById('btnNextQuestion').classList.add('hidden');
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            if (userAnswers[currentQuestionIndex] !== null) return; // Already answered
+            
+            const level = gameData[currentLevelIndex];
+            const correctIndex = level.questions[currentQuestionIndex].answer;
+            const isCorrect = selectedIndex === correctIndex;
+            
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            const allButtons = document.querySelectorAll('#qOptions .option-btn');
+            allButtons.forEach(b => b.style.pointerEvents = 'none'); // Disable clicks
+            
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const feedbackText = document.getElementById('feedbackText');
+            
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                tempLevelScore += 10;
+                feedbackText.innerText = "«أَحْسَنْتِ! بَارَكَ اللهُ فِيكِ 🌸\nJawaban anti benar! Luar biasa.»";
+            } else {
+                btnElement.classList.add('wrong');
+                allButtons[correctIndex].classList.add('correct'); // Show correct answer
+                feedbackText.innerText = "«لا بأس، حَاوِلِي مَرَّةً أُخْرَى 🌷\nTidak apa-apa, shalihah. Perhatikan jawaban yang benar ya.»";
+            }
+            
+            feedbackContainer.classList.remove('hidden');
+            document.getElementById('btnNextQuestion').classList.remove('hidden');
+            updateTopScore();
+        }
+
+        function nextQuestion() {
+            const level = gameData[currentLevelIndex];
+            if (currentQuestionIndex < level.questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                finishLevel();
+            }
+        }
+
+        function finishLevel() {
+            // Level completion logic
+            const maxLevelScore = gameData[currentLevelIndex].questions.length * 10;
+            tempLevelScore += 20; // Completion bonus
+            
+            // Determine Stars (Max 3 per level)
+            let stars = 1; // Min 1 star for finishing
+            const qScore = tempLevelScore - 20;
+            if (qScore === maxLevelScore) stars = 3;
+            else if (qScore >= maxLevelScore * 0.5) stars = 2;
+
+            // Save max score and stars if replaying
+            if (tempLevelScore > gameState.levelScores[currentLevelIndex]) {
+                gameState.levelScores[currentLevelIndex] = tempLevelScore;
+            }
+            if (stars > gameState.levelStars[currentLevelIndex]) {
+                gameState.levelStars[currentLevelIndex] = stars;
+            }
+
+            // Unlock next
+            if (currentLevelIndex + 1 >= gameState.unlockedLevels && currentLevelIndex < 4) {
+                gameState.unlockedLevels = currentLevelIndex + 2;
+            }
+
+            // Final game check
+            if (currentLevelIndex === 4 && !gameState.completed) {
+                gameState.completed = true;
+            }
+
+            saveProgress();
+            
+            // Render Level Result Page
+            document.getElementById('resLevelTitle').innerText = gameData[currentLevelIndex].title;
+            document.getElementById('resLevelScore').innerText = tempLevelScore;
+            document.getElementById('resSummary').innerText = gameData[currentLevelIndex].summary;
+            
+            const starsContainer = document.getElementById('levelStars');
+            starsContainer.innerHTML = '';
+            for(let i=0; i<3; i++) {
+                setTimeout(() => {
+                    starsContainer.innerHTML += `<svg class="star ${i < stars ? 'active' : ''}" viewBox="0 0 24 24"><use href="#icon-star"/></svg>`;
+                }, i * 300);
+            }
+
+            const nextBtn = document.getElementById('btnNextLevel');
+            if (currentLevelIndex === 4) {
+                nextBtn.innerText = "Lihat Hasil Akhir 🏆";
+                nextBtn.onclick = showFinalResult;
+            } else {
+                nextBtn.innerText = "Lanjut Level Berikutnya ➡️";
+                nextBtn.onclick = () => loadMaterial(currentLevelIndex + 1);
+            }
+
+            showPage('pageLevelResult');
+        }
+
+        function showFinalResult() {
+            updateTopScore();
+            
+            let totalStars = gameState.levelStars.reduce((a, b) => a + b, 0); // Max 15
+            let gameStars = 0;
+            let title = "";
+            
+            // Normalize to 5 stars for final result
+            if (totalStars >= 14) { gameStars = 5; title = "Mutiara Arba'in ⭐⭐⭐⭐⭐"; }
+            else if (totalStars >= 11) { gameStars = 4; title = "Pejuang Sunnah ⭐⭐⭐⭐"; }
+            else if (totalStars >= 7) { gameStars = 3; title = "Penuntut Ilmu ⭐⭐⭐"; }
+            else { gameStars = 2; title = "Terus Belajar ⭐⭐"; }
+
+            const finalPlayerName = gameState.playerName ? `<br><span style="font-size: 1.2rem; color: var(--text-main); font-weight: normal;">${gameState.playerName} - ${gameState.playerClass}</span>` : "";
+            document.getElementById('finalTitle').innerHTML = `${title}${finalPlayerName}`;
+            
+            document.getElementById('resFinalScore').innerText = gameState.totalScore;
+            
+            const starsContainer = document.getElementById('finalStars');
+            starsContainer.innerHTML = '';
+            for(let i=0; i<5; i++) {
+                setTimeout(() => {
+                    starsContainer.innerHTML += `<svg class="star ${i < gameStars ? 'active' : ''}" viewBox="0 0 24 24"><use href="#icon-star"/></svg>`;
+                }, i * 300);
+            }
+
+            showPage('pageFinalResult');
+        }
+
+        function renderAllSummaries() {
+            const container = document.getElementById('allSummaries');
+            container.innerHTML = '';
+            gameData.forEach(lvl => {
+                container.innerHTML += `
+                    <div class="card" style="margin-bottom:15px; padding: 15px;">
+                        <h4 style="color:var(--primary);">${lvl.subtitle}: ${lvl.title.split(': ')[1]}</h4>
+                        <p style="font-size:0.9rem;">${lvl.summary}</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize
+        window.onload = () => {
+            if (gameState.playerName) document.getElementById('playerName').value = gameState.playerName;
+            if (gameState.playerClass) document.getElementById('playerClass').value = gameState.playerClass;
+            
+            renderMap();
+            renderAllSummaries();
+            updateTopScore();
+        };
+
+    </script>
+</body>
+</html>
